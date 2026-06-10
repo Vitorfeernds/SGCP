@@ -1,6 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-
 a = Analysis(
     ['sgcp.py'],
     pathex=[],
@@ -14,6 +13,7 @@ a = Analysis(
     noarchive=False,
     optimize=0,
 )
+
 pyz = PYZ(a.pure)
 
 exe = EXE(
@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='sgcp',
+    name='SGCP',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -35,4 +35,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon=r'C:\Users\Ériston Vitor\Downloads\Captura-de-tela-2026-06-08-165741.ico'
 )
