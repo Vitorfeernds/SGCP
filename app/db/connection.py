@@ -1,3 +1,10 @@
+import json, os
+from app.config import ENV_FILE, USUARIOS_FILE, PEDIDOS_FILE, CARDAPIO_FILE
+import hashlib
+from pymongo import MongoClient
+from hashlib import sha256
+from app.db.usuarios import _hash_senha
+
 # ============================================================================
 # MONGODB — camada de abstração com fallback para JSON local
 # ============================================================================

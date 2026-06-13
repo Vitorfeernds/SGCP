@@ -1,3 +1,5 @@
+import os, sys
+
 if getattr(sys, "frozen", False):
     _BASE_DIR = os.path.dirname(sys.executable)
 else:

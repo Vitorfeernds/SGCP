@@ -1,3 +1,9 @@
+import os, json, tkinter as tk
+from app.config import DATA_DIR
+from app.db.cardapio import _CARDAPIO_IDX, _indice_cardapio
+from app.db.usuarios import _MONGO_OK, PERFIL_ADMIN, PERFIL_ATEND
+from app.db.pedidos import STATUS_CORES
+
 # ============================================================================
 # SISTEMA DE TEMAS
 # ============================================================================
@@ -26,6 +32,19 @@ COLORS = dict(_LIGHT)
 _THEME_FILE = os.path.join(DATA_DIR if "DATA_DIR" in dir() else "data", "theme.json")
 
 
+# ============================================================================
+# PALETA / FONTE / STATUS
+# ============================================================================
+FONT = "Segoe UI"
+
+STATUS_CORES = {
+    "Em preparo": (COLORS["amber"], COLORS["amber_light"]),
+    "Finalizado": (COLORS["green"], COLORS["green_light"]),
+    "Aguardando": (COLORS["blue"],  COLORS["blue_light"]),
+    "Cancelado":  (COLORS["red"],   COLORS["red_light"]),
+}
+
+
 def set_theme(name: str) -> None:
     """Alterna entre 'light' e 'dark'. Atualiza COLORS in-place."""
     global CURRENT_THEME
@@ -33,7 +52,7 @@ def set_theme(name: str) -> None:
     COLORS.update(_LIGHT if name == "light" else _DARK)
     try:
         os.makedirs(os.path.dirname(_THEME_FILE), exist_ok=True)
-        _json_save(_THEME_FILE, {"theme": name})
+        json.save(_THEME_FILE, {"theme": name})
     except Exception:
         pass
 
@@ -41,12 +60,18 @@ def set_theme(name: str) -> None:
 def load_theme() -> None:
     """Carrega o tema salvo em disco (chamado no início)."""
     try:
-        data = _json_load(_THEME_FILE, {"theme": "light"})
+        data = json.load(_THEME_FILE, {"theme": "light"})
         set_theme(data.get("theme", "light"))
     except Exception:
         set_theme("light")
 
 # ── helpers de interpolação de cor ─────────────────────────────────────────
+def _hex_to_rgb(h: str):
+    h = h.lstrip("#")
+    return int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+
+def _rgb_to_hex(r, g, b) -> str:
+    return f"#{r:02x}{g:02x}{b:02x}"
 
 def _lerp_color(c1: str, c2: str, t: float) -> str:
     r1,g1,b1 = _hex_to_rgb(c1)

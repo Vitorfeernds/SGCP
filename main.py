@@ -52,20 +52,20 @@ class SGCPApp(
         super().__init__()
  
         # 1) Persistência: tenta MongoDB, cai para JSON local
-        conexao.inicializar()
-        usuarios_db.seed(conexao.MONGO_OK)
-        pedidos_db.seed(conexao.MONGO_OK)
-        cardapio_db.seed(conexao.MONGO_OK, CARDAPIO_PADRAO)
+        connection.inicializar()
+        usuarios.seed(connection.MONGO_OK)
+        pedidos.seed(connection.MONGO_OK)
+        cardapio.seed(connection.MONGO_OK, CARDAPIO_PADRAO)
  
         # 2) Tema salvo
         load_theme()
         self.configure(bg=self.cget("bg"))  # refresca cor de fundo após tema
  
         # 3) Estado em memória
-        state.CARDAPIO = cardapio_db.carregar(CARDAPIO_PADRAO)
+        state.CARDAPIO = cardapio.carregar(CARDAPIO_PADRAO)
         reconstruir_indice()
  
-        self.pedidos     = pedidos_db.carregar()
+        self.pedidos     = pedidos.carregar()
         self.os_counter  = self._proximo_os()
  
         # 4) Tela inicial
