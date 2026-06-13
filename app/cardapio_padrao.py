@@ -1,0 +1,103 @@
+CARDAPIO_PADRAO: list = [
+    {
+        "categoria": "Pratos Principais",
+        "itens": [
+            {
+                "nome": "Escalope de Filé Mignon",
+                "preco": 78.90,
+                "tempo": "25 min",
+                "disponivel": True,
+                "cor": "#7C2D12",
+                "ingredientes": [
+                    "Filé mignon",
+                    "Molho madeira",
+                    "Champignon",
+                    "Arroz branco",
+                    "Batata rústica",
+                ],
+                "modo": [
+                    "Tempere o filé com sal e pimenta.",
+                    "Sele a carne em fogo alto dos dois lados.",
+                    "Prepare o molho madeira com champignon.",
+                    "Monte o prato com arroz, batata e o escalope ao molho.",
+                ],
+            },
+            {
+                "nome": "Risoto de Camarão",
+                "preco": 69.50,
+                "tempo": "30 min",
+                "disponivel": True,
+                "cor": "#B45309",
+                "ingredientes": [
+                    "Arroz arbóreo",
+                    "Camarão limpo",
+                    "Caldo de legumes",
+                    "Vinho branco",
+                    "Manteiga e parmesão",
+                ],
+                "modo": [
+                    "Refogue o arroz na manteiga até ficar translúcido.",
+                    "Adicione vinho branco e deixe evaporar.",
+                    "Vá adicionando o caldo quente, aos poucos, mexendo sempre.",
+                    "Salteie os camarões e misture nos últimos minutos.",
+                    "Finalize com manteiga e parmesão.",
+                ],
+            },
+            {
+                "nome": "Salmão Grelhado",
+                "preco": 64.00,
+                "tempo": "20 min",
+                "disponivel": True,
+                "cor": "#EA580C",
+                "ingredientes": [
+                    "Filé de salmão",
+                    "Aspargos",
+                    "Limão",
+                    "Azeite",
+                    "Purê de batatas",
+                ],
+                "modo": [
+                    "Tempere o salmão com sal, pimenta e limão.",
+                    "Grelhe em fogo médio-alto até dorar dos dois lados.",
+                    "Salteie os aspargos no azeite.",
+                    "Sirva com purê de batatas.",
+                ],
+            },
+        ],
+    },
+    {
+        "categoria": "Bebidas",
+        "itens": [
+            {
+                "nome": "Suco Natural de Laranja",
+                "preco": 12.00,
+                "tempo": "5 min",
+                "disponivel": True,
+                "cor": "#F59E0B",
+                "ingredientes": ["Laranjas frescas", "Água ou gelo (opcional)"],
+                "modo": [
+                    "Extraia o suco das laranjas.",
+                    "Coe e sirva gelado.",
+                ],
+            },
+            {
+                "nome": "Água com Gás",
+                "preco": 6.50,
+                "tempo": "1 min",
+                "disponivel": True,
+                "cor": "#0EA5E9",
+                "ingredientes": ["Água com gás gelada"],
+                "modo": ["Sirva gelada, com limão a gosto."],
+            },
+            {
+                "nome": "Taça de Vinho Tinto",
+                "preco": 28.00,
+                "tempo": "2 min",
+                "disponivel": True,
+                "cor": "#7F1D1D",
+                "ingredientes": ["Vinho tinto da casa"],
+                "modo": ["Sirva à temperatura ambiente em copo de taça."],
+            },
+        ],
+    },
+]

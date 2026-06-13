@@ -1,13 +1,12 @@
-# === SGCP — arquivos sensiveis (nao versionar) ===
-
+# === SGCP — arquivos sensíveis e gerados (não versionar) ===
 data/
-*.env
 *.json
-
-build/
-dist/
+*.env
+.env
 __pycache__/
 *.pyc
-
-node_modules/
-.next/
+build/
+dist/
+*.spec
+.venv/
+venv/
