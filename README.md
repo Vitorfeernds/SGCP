@@ -217,6 +217,3 @@ Se houver piscada ao trocar de abas:
 
 Projeto em desenvolvimento para uso local/desktop.
 
-## Licenca
-
-Defina aqui a licenca do projeto antes de publicar no GitHub.
