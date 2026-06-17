@@ -1,12 +1,6 @@
 import json, os
 from app.config import ENV_FILE, USUARIOS_FILE, PEDIDOS_FILE, CARDAPIO_FILE
 from pymongo import MongoClient
-import hashlib
-
-def _hash_senha(senha: str) -> str:
-    return hashlib.sha256(
-        senha.encode("utf-8")
-    ).hexdigest()
 
 # ============================================================================
 # MONGODB — camada de abstração com fallback para JSON local
@@ -32,7 +26,7 @@ def _ler_env() -> dict:
     return env
 
 
-def _inicializar_mongo():
+def inicializar_mongo():
     #Tenta conectar ao MongoDB usando MONGO_URI do .env.
     #Se falhar, _MONGO_OK permanece False e o sistema usa JSON local.
     #Se conectar com sucesso, semeia dados iniciais se as coleções estiverem vazias.

@@ -3,7 +3,7 @@ from app.logic.analytics import _calcular_fluxo
 from app.theme import COLORS, FONT, HoverButton, brl
 from app.config import TOTAL_MESAS
 from app.logic.analytics import mesas_ocupadas, _calcular_vendas
-from app.db.usuarios import MONGO_OK
+from app.db.connection import MONGO_OK
 from datetime import datetime
 
 

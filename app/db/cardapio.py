@@ -1,12 +1,13 @@
-from app.db.connection import _json_load, _json_save, _mongo_db, MONGO_OK
+from app.db.connection import _json_load, _json_save
+import app.db.connection as connection
 from app.config import CARDAPIO_FILE
 import copy, re
 from app.cardapio_padrao import CARDAPIO_PADRAO
 
 def db_cardapio_carregar() -> list:
     # Carrega o cardápio do banco. Se ainda não existir, usa o cardápio padrão compilado no código e o persiste para edições futuras.
-    if MONGO_OK:
-        grupos = list(_mongo_db["cardapio"].find({}, {"_id": 0}))
+    if connection.MONGO_OK:
+        grupos = list(connection._mongo_db["cardapio"].find({}, {"_id": 0}))
         return _normalizar_cardapio(grupos if grupos else _seed_cardapio_db())
     dados = _json_load(CARDAPIO_FILE, None)
     if dados is None:
@@ -18,10 +19,10 @@ def db_cardapio_carregar() -> list:
 def db_cardapio_salvar(cardapio: list) -> None:
     # Persiste o cardápio completo.
     cardapio = _normalizar_cardapio(cardapio)
-    if MONGO_OK:
-        _mongo_db["cardapio"].drop()
+    if connection.MONGO_OK:
+        connection._mongo_db["cardapio"].drop()
         if cardapio:
-            _mongo_db["cardapio"].insert_many(
+            connection._mongo_db["cardapio"].insert_many(
                 [{k: v for k, v in g.items()} for g in cardapio])
     else:
         _json_save(CARDAPIO_FILE, cardapio)

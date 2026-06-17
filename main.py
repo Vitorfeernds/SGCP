@@ -52,7 +52,7 @@ class SGCPApp(
 
 
         # 1) Persistência: tenta MongoDB, cai para JSON local
-        connection._inicializar_mongo()
+        connection.inicializar_mongo()
         usuarios.seed(connection.MONGO_OK)
         pedidos.seed(connection.MONGO_OK)
         cardapio.seed(connection.MONGO_OK, CARDAPIO_PADRAO)

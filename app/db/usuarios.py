@@ -1,14 +1,13 @@
 import hashlib
-import json
-import os
 from app.config import USUARIOS_FILE, PERFIL_ADMIN, PERFIL_ATENDENTE
-from app.db.connection import MONGO_OK, _json_load, _json_save, _mongo_db
+import app.db.connection as connection
+from app.db.connection import _json_load, _json_save
 
 
 def seed(mongo_ok):    #Garante que exista pelo menos um usuário admin. Se o MongoDB estiver disponível, semeia diretamente nele; caso contrário, semeia no JSON local.
-    if mongo_ok:
-        if _mongo_db["usuarios"].count_documents({}) == 0:
-            _mongo_db["usuarios"].insert_one({
+    if connection.MONGO_OK:
+        if connection._mongo_db["usuarios"].count_documents({}) == 0:
+            connection._mongo_db["usuarios"].insert_one({
                 "email": "admin@guanambusiness.com",
                 "hash_senha": _hash_senha("admin123"),
                 "nome": "Administrador",
@@ -20,16 +19,16 @@ def _hash_senha(senha: str) -> str:
 
 
 def carregar_usuarios() -> dict:
-    if MONGO_OK:
-        docs = list(_mongo_db["usuarios"].find({}, {"_id": 0}))
+    if connection.MONGO_OK:
+        docs = list(connection._mongo_db["usuarios"].find({}, {"_id": 0}))
         return {d["email"]: d for d in docs}
     return _json_load(USUARIOS_FILE, {})
 
 
 def salvar_usuarios(usuarios: dict) -> None:
-    if MONGO_OK:
+    if connection.MONGO_OK:
         for email, dados in usuarios.items():
-            _mongo_db["usuarios"].update_one(
+            connection._mongo_db["usuarios"].update_one(
                 {"email": email}, {"$set": {**dados, "email": email}}, upsert=True)
     else:
         _json_save(USUARIOS_FILE, usuarios)
@@ -69,8 +68,8 @@ def remover_usuario(email_alvo, email_admin):
     email_alvo = email_alvo.lower().strip()
     if email_alvo == email_admin.lower().strip():
         return False, "Voce nao pode remover a sua propria conta."
-    if MONGO_OK:
-        res = _mongo_db["usuarios"].delete_one({"email": email_alvo})
+    if connection.MONGO_OK:
+        res = connection._mongo_db["usuarios"].delete_one({"email": email_alvo})
         return (True, "Conta removida.") if res.deleted_count else (False, "Usuario nao encontrado.")
     usuarios = carregar_usuarios()
     if email_alvo not in usuarios:

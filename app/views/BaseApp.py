@@ -1,6 +1,6 @@
-import re
+import json
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk
 import platform
 from app.theme import COLORS, FONT, HoverButton, set_theme, CURRENT_THEME
 
@@ -9,6 +9,8 @@ class BaseApp(tk.Tk):
         super().__init__()
         self.title("S.G.C.P - Sistema de Gestao e Controle de Pedidos")
         self.configure(bg=COLORS["bg"])
+        self.container = tk.Frame(self, bg=COLORS["bg"])
+        self.container.pack(fill="both", expand=True)
 
         # Tela cheia imediata (cross-platform)
         try:
@@ -88,3 +90,53 @@ class BaseApp(tk.Tk):
 
         self._montar_menu_inferior(root)
         return sf
+    
+    def _tick(self):
+     self.after(10000, self._tick)
+
+
+    def limpar_container(self):
+        for widget in self.container.winfo_children():
+         widget.destroy()
+
+    def _proximo_os(self):
+        if not hasattr(self, "pedidos") or not self.pedidos:
+            return 1
+
+        try:
+            numeros = []
+
+            for pedido in self.pedidos:
+                os_num = str(pedido.get("os", "0"))
+
+                if os_num.startswith("OS-"):
+                    os_num = os_num.replace("OS-", "")
+
+                numeros.append(int(os_num))
+
+                return max(numeros) + 1 if numeros else 1
+
+        except Exception:
+             return len(self.pedidos) + 1
+        
+    def _is_admin(self):
+        return getattr(self, "_admin_cache", False)
+    
+    def _render_tela(self, tela):
+        if tela == "home":
+            self.mostrar_dashboard()
+
+        elif tela == "pedidos":
+            self.mostrar_pedidos()
+
+        elif tela == "cardapio":
+            self.mostrar_cardapio()
+
+        elif tela == "usuarios":
+            self.mostrar_usuarios()
+
+        elif tela == "login":
+            self.mostrar_login()
+
+    def _montar_menu_inferior(self, root):
+        pass

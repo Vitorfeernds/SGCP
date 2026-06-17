@@ -13,8 +13,7 @@ class LoginMixin:
 
     def mostrar_login(self):
         self.tela_atual = "login"
-        self.limpar_container()
-
+        
         wrap = tk.Frame(self.container, bg=COLORS["dark"])
         wrap.pack(fill="both", expand=True)
 

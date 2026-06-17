@@ -31,7 +31,7 @@ class PedidosMixin:
                            highlightbackground=COLORS["gray_light"], highlightthickness=1)
             row.pack(fill="x", pady=6, padx=12)
             row.bind("<Button-1>", lambda e, p=p: self._abrir_detalhe_os(p))
-def _abrir_detalhe_os(self, p):
+    def abrir_detalhe_os(self, p):
         mesa_lib = p.get("mesa_liberada", False)
         win = tk.Toplevel(self)
         win.title(f"Detalhes  {p['os']}")
