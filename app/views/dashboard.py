@@ -1,14 +1,9 @@
-import re
 import tkinter as tk
-from tkinter import ttk, messagebox
-from typing import Self
 from app.logic.analytics import _calcular_fluxo
 from app.theme import COLORS, FONT, HoverButton, brl
 from app.config import TOTAL_MESAS
-from app.logic.auth import autenticar
-from app.logic.analytics import _tempo_medio, mesas_ocupadas, _calcular_vendas
-from app.db.cardapio import _CARDAPIO_IDX, _indice_cardapio
-from app.db.usuarios import _MONGO_OK, PERFIL_ADMIN, PERFIL_ATENDENTE
+from app.logic.analytics import mesas_ocupadas, _calcular_vendas
+from app.db.usuarios import MONGO_OK
 from datetime import datetime
 
 
@@ -42,9 +37,9 @@ class DashboardMixin:
         tk.Label(saud_row, text=f"{grt}, {nome_curto}!",
                  bg=COLORS["bg"], fg=COLORS["dark"],
                  font=(FONT, 16, "bold")).pack(side="left")
-        db_txt = "MongoDB" if _MONGO_OK else "JSON local"
-        db_bg  = COLORS["green_light"] if _MONGO_OK else COLORS["amber_light"]
-        db_fg  = COLORS["green_dark"]  if _MONGO_OK else COLORS["amber"]
+        db_txt = "MongoDB" if MONGO_OK else "JSON local"
+        db_bg  = COLORS["green_light"] if MONGO_OK else COLORS["amber_light"]
+        db_fg  = COLORS["green_dark"]  if MONGO_OK else COLORS["amber"]
         tk.Label(saud_row, text=f"  {db_txt}  ", bg=db_bg, fg=db_fg,
                  font=(FONT, 8, "bold"), padx=6, pady=2).pack(side="right")
         tk.Label(pad, text=f"Atualizado às {datetime.now().strftime('%H:%M:%S')}",
@@ -267,23 +262,23 @@ def _grafico_rosca(self, parent, ocupadas, total_mesas):
                        fill=COLORS["gray"], font=(FONT, 8))
 
         # animação do arco: 24 frames
-        frames = 24
-def _step(i=1):
-        if not cv.winfo_exists(): return
-        t = i / frames
-        ext = target_ext * t
-        pct_now = abs(ext) / 360
-        cv.itemconfig(arc_id, extent=ext)
-        cv.itemconfig(pct_lbl, text=f"{int(pct_now*100)}%")
-        if i < frames:
-            cv.after(18, lambda: _step(i + 1))
+        Frame = 24
+        def _step(i=1):
+            if not cv.winfo_exists(): return
+            t = i / Frame
+            ext = target_ext * t
+            pct_now = abs(ext) / 360
+            cv.itemconfig(arc_id, extent=ext)
+            cv.itemconfig(pct_lbl, text=f"{int(pct_now*100)}%")
+            if i < Frame:
+                cv.after(18, lambda: _step(i + 1))
         cv.after(80, _step)
 
         info = tk.Frame(row, bg=COLORS["card"])
         info.pack(side="left", padx=18)
-        Self._legenda(info, COLORS["green"],      f"Ocupadas: {mesas_ocupadas}")
-        Self._legenda(info, COLORS["gray_light"], f"Livres: {TOTAL_MESAS - mesas_ocupadas}")
-        tk.Label(info, text=f"Total: {TOTAL_MESAS} mesas",
+        self._legenda(info, COLORS["green"],      f"Ocupadas: {ocupadas}")
+        self._legenda(info, COLORS["gray_light"], f"Livres: {total_mesas - ocupadas}")
+        tk.Label(info, text=f"Total: {total_mesas} mesas",
                  bg=COLORS["card"], fg=COLORS["dark"],
                  font=(FONT, 9, "bold")).pack(anchor="w", pady=(8, 0))
 

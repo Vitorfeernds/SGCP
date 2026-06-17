@@ -3,8 +3,8 @@ from tkinter import ttk, messagebox
  
 from app.theme import COLORS, FONT, HoverButton
 from app.config import PERFIL_ADMIN, PERFIL_ATENDENTE
-from app.logic.auth import cadastrar, remover
-from app.db.usuarios import carregar
+from app.logic.auth import cadastrar_usuario, remover_usuario
+from app.db.usuarios import carregar_usuarios
  
  
 class UsuariosMixin:
@@ -56,7 +56,7 @@ class UsuariosMixin:
             tk.Label(lista_f, text="Usuários cadastrados",
                      bg=COLORS["bg"], fg=COLORS["dark"],
                      font=(FONT, 12, "bold")).pack(anchor="w", pady=(0, 8))
-            for email_u, dados in carregar().items():
+            for email_u, dados in carregar_usuarios().items():
                 cu = tk.Frame(lista_f, bg=COLORS["card"],
                               highlightbackground=COLORS["gray_light"],
                               highlightthickness=1)
@@ -81,7 +81,7 @@ class UsuariosMixin:
                     def _rem(e=email_u):
                         if messagebox.askyesno("Confirmar", f"Remover {e}?",
                                                parent=win):
-                            ok, msg = remover(e, self.usuario_logado)
+                            ok, msg = remover_usuario(e, self.usuario_logado)
                             (messagebox.showinfo if ok
                              else messagebox.showerror)("Resultado", msg, parent=win)
                             if ok:
@@ -137,7 +137,7 @@ class UsuariosMixin:
             if s != c:
                 messagebox.showerror("Erro", "As senhas não conferem.", parent=win)
                 return
-            ok, msg = cadastrar(fe.get().strip(), s, fn.get().strip(), pv.get())
+            ok, msg = cadastrar_usuario(fe.get().strip(), s, fn.get().strip(), pv.get())
             (messagebox.showinfo if ok else messagebox.showerror)(
                 "Resultado", msg, parent=win)
             if ok:

@@ -1,8 +1,5 @@
 import os, json, tkinter as tk
 from app.config import DATA_DIR
-from app.db.cardapio import _CARDAPIO_IDX, _indice_cardapio
-from app.db.usuarios import _MONGO_OK, PERFIL_ADMIN, PERFIL_ATEND
-from app.db.pedidos import STATUS_CORES
 
 # ============================================================================
 # SISTEMA DE TEMAS
@@ -46,22 +43,33 @@ STATUS_CORES = {
 
 
 def set_theme(name: str) -> None:
-    """Alterna entre 'light' e 'dark'. Atualiza COLORS in-place."""
     global CURRENT_THEME
+
     CURRENT_THEME = name
     COLORS.update(_LIGHT if name == "light" else _DARK)
+
     try:
         os.makedirs(os.path.dirname(_THEME_FILE), exist_ok=True)
-        json.save(_THEME_FILE, {"theme": name})
+
+        with open(_THEME_FILE, "w", encoding="utf-8") as f:
+            json.dump(
+                {"theme": name},
+                f,
+                ensure_ascii=False,
+                indent=2
+            )
+
     except Exception:
         pass
 
 
 def load_theme() -> None:
-    """Carrega o tema salvo em disco (chamado no início)."""
     try:
-        data = json.load(_THEME_FILE, {"theme": "light"})
+        with open(_THEME_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
         set_theme(data.get("theme", "light"))
+
     except Exception:
         set_theme("light")
 

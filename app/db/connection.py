@@ -1,16 +1,19 @@
 import json, os
 from app.config import ENV_FILE, USUARIOS_FILE, PEDIDOS_FILE, CARDAPIO_FILE
-import hashlib
 from pymongo import MongoClient
-from hashlib import sha256
-from app.db.usuarios import _hash_senha
+import hashlib
+
+def _hash_senha(senha: str) -> str:
+    return hashlib.sha256(
+        senha.encode("utf-8")
+    ).hexdigest()
 
 # ============================================================================
 # MONGODB — camada de abstração com fallback para JSON local
 # ============================================================================
 _mongo_client = None
 _mongo_db     = None
-_MONGO_OK     = False   # True somente quando conexão real estiver ativa
+MONGO_OK     = False   # True somente quando conexão real estiver ativa
 
 # ============================================================================
 # Conexão com MongoDB Atlas
@@ -33,7 +36,7 @@ def _inicializar_mongo():
     #Tenta conectar ao MongoDB usando MONGO_URI do .env.
     #Se falhar, _MONGO_OK permanece False e o sistema usa JSON local.
     #Se conectar com sucesso, semeia dados iniciais se as coleções estiverem vazias.
-    global _mongo_client, _mongo_db, _MONGO_OK
+    global _mongo_client, _mongo_db, MONGO_OK
     env = _ler_env()
     uri = env.get("MONGO_URI", "")
     if not uri:
@@ -44,18 +47,18 @@ def _inicializar_mongo():
         _mongo_client.server_info()          # força a conexão
         db_name = env.get("MONGO_DB", "sgcp")
         _mongo_db = _mongo_client[db_name]
-        _MONGO_OK = True
+        MONGO_OK = True
         print(f"[DB] MongoDB conectado: {db_name}")
         _seed_mongo()
     except Exception as e:
-        _MONGO_OK = False
+        MONGO_OK = False
         print(f"[DB] MongoDB indisponivel ({e}). Usando JSON local.")
 
 
 def _seed_mongo():
     #Semeia dados iniciais no MongoDB se as coleções estiverem vazias.
     #Também importa dados do JSON local para o MongoDB na primeira vez.
-    if not _MONGO_OK:
+    if not MONGO_OK:
         return
 
     # Importar usuários do JSON local → MongoDB (migração automática)

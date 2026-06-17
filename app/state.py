@@ -1,0 +1,2 @@
+CARDAPIO = []
+CARDAPIO_IDX = {}

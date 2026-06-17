@@ -1,28 +1,38 @@
-import json, os, hashlib
+import hashlib
+import json
+import os
 from app.config import USUARIOS_FILE, PERFIL_ADMIN, PERFIL_ATENDENTE
-from app.db.connection import _mongo_db, _MONGO_OK
+from app.db.connection import MONGO_OK, _json_load, _json_save, _mongo_db
 
 
-
+def seed(mongo_ok):    #Garante que exista pelo menos um usuário admin. Se o MongoDB estiver disponível, semeia diretamente nele; caso contrário, semeia no JSON local.
+    if mongo_ok:
+        if _mongo_db["usuarios"].count_documents({}) == 0:
+            _mongo_db["usuarios"].insert_one({
+                "email": "admin@guanambusiness.com",
+                "hash_senha": _hash_senha("admin123"),
+                "nome": "Administrador",
+                "perfil": PERFIL_ADMIN
+            })
 
 def _hash_senha(senha: str) -> str:
     return hashlib.sha256(senha.encode("utf-8")).hexdigest()
 
 
 def carregar_usuarios() -> dict:
-    if _MONGO_OK:
+    if MONGO_OK:
         docs = list(_mongo_db["usuarios"].find({}, {"_id": 0}))
         return {d["email"]: d for d in docs}
-    return json.load(USUARIOS_FILE, {})
+    return _json_load(USUARIOS_FILE, {})
 
 
 def salvar_usuarios(usuarios: dict) -> None:
-    if _MONGO_OK:
+    if MONGO_OK:
         for email, dados in usuarios.items():
             _mongo_db["usuarios"].update_one(
                 {"email": email}, {"$set": {**dados, "email": email}}, upsert=True)
     else:
-        json.save(USUARIOS_FILE, usuarios)
+        _json_save(USUARIOS_FILE, usuarios)
 
 
 def autenticar(email: str, senha: str):
@@ -59,7 +69,7 @@ def remover_usuario(email_alvo, email_admin):
     email_alvo = email_alvo.lower().strip()
     if email_alvo == email_admin.lower().strip():
         return False, "Voce nao pode remover a sua propria conta."
-    if _MONGO_OK:
+    if MONGO_OK:
         res = _mongo_db["usuarios"].delete_one({"email": email_alvo})
         return (True, "Conta removida.") if res.deleted_count else (False, "Usuario nao encontrado.")
     usuarios = carregar_usuarios()
@@ -68,3 +78,5 @@ def remover_usuario(email_alvo, email_admin):
     del usuarios[email_alvo]
     salvar_usuarios(usuarios)
     return True, "Conta removida com sucesso."
+
+

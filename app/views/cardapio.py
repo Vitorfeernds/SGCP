@@ -3,20 +3,20 @@ import tkinter as tk
 from tkinter import ttk, messagebox
  
 from app.theme import COLORS, FONT, HoverButton, brl
-from app.db import cardapio_db
+import app.db.cardapio as cardapio_db
 from app.logic.cardapio import (
     reconstruir_indice, categoria_do_item, inserir_em_categoria,
 )
 import app.state as state
- 
- 
+
+
 class CardapioMixin:
  
     # ── recarregar estado após qualquer edição ───────────────────────────────
  
     def _reload_cardapio(self):
         """Recarrega state.CARDAPIO do banco e reconstrói o índice."""
-        state.CARDAPIO = cardapio_db.carregar(state.CARDAPIO)
+        state.CARDAPIO = cardapio_db.db_cardapio_carregar()
         reconstruir_indice()
  
     # ── tela principal ────────────────────────────────────────────────────────

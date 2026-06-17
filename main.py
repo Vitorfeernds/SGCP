@@ -10,13 +10,13 @@ from app.db import pedidos
 from app.db import cardapio
 import app.state as state
 from app.logic.cardapio import reconstruir_indice
- 
-from app.views.base      import BaseApp
-from app.views.login     import LoginMixin
+
+from app.views.BaseApp import BaseApp
+from app.views.login import LoginMixin
 from app.views.dashboard import DashboardMixin
-from app.views.pedidos   import PedidosMixin
-from app.views.cardapio  import CardapioMixin
-from app.views.usuarios  import UsuariosMixin
+from app.views.pedidos import PedidosMixin
+from app.views.cardapio import CardapioMixin
+from app.views.usuarios import UsuariosMixin
  
  
 # ── Bootstrap de arquivos/pastas ──────────────────────────────────────────────
@@ -31,7 +31,6 @@ def _bootstrap_arquivos() -> None:
  
  
 # ── Classe final por composição de mixins ─────────────────────────────────────
- 
 class SGCPApp(
     LoginMixin,
     DashboardMixin,
@@ -50,9 +49,10 @@ class SGCPApp(
  
     def __init__(self):
         super().__init__()
- 
+
+
         # 1) Persistência: tenta MongoDB, cai para JSON local
-        connection.inicializar()
+        connection._inicializar_mongo()
         usuarios.seed(connection.MONGO_OK)
         pedidos.seed(connection.MONGO_OK)
         cardapio.seed(connection.MONGO_OK, CARDAPIO_PADRAO)
@@ -62,10 +62,10 @@ class SGCPApp(
         self.configure(bg=self.cget("bg"))  # refresca cor de fundo após tema
  
         # 3) Estado em memória
-        state.CARDAPIO = cardapio.carregar(CARDAPIO_PADRAO)
+        state.CARDAPIO = cardapio.db_cardapio_carregar()
         reconstruir_indice()
  
-        self.pedidos     = pedidos.carregar()
+        self.pedidos     = pedidos.db_pedidos_carregar()
         self.os_counter  = self._proximo_os()
  
         # 4) Tela inicial

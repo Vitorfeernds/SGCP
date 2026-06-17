@@ -1,3 +1,10 @@
+import hashlib
+from app.db.usuarios import carregar_usuarios, salvar_usuarios
+import app.state as state
+from app.db.usuarios import PERFIL_ADMIN, PERFIL_ATENDENTE
+from app.db.connection import MONGO_OK, _mongo_db
+
+
 def _hash_senha(senha: str) -> str:
     return hashlib.sha256(senha.encode("utf-8")).hexdigest()
 
@@ -35,7 +42,7 @@ def remover_usuario(email_alvo, email_admin):
     email_alvo = email_alvo.lower().strip()
     if email_alvo == email_admin.lower().strip():
         return False, "Voce nao pode remover a sua propria conta."
-    if _MONGO_OK:
+    if MONGO_OK:
         res = _mongo_db["usuarios"].delete_one({"email": email_alvo})
         return (True, "Conta removida.") if res.deleted_count else (False, "Usuario nao encontrado.")
     usuarios = carregar_usuarios()

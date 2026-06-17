@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import platform
 from app.theme import COLORS, FONT, HoverButton, set_theme, CURRENT_THEME
+
 class BaseApp(tk.Tk):
     def __init__(self):
         super().__init__()

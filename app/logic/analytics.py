@@ -1,3 +1,7 @@
+from datetime import datetime
+from collections import defaultdict
+
+
 # ============================================================================
 # HELPERS — MESAS OCUPADAS
 # ============================================================================
@@ -58,3 +62,4 @@ def _calcular_vendas(pedidos: list):
     # usa exatamente as mesmas horas que _calcular_fluxo
     labels, _ = _calcular_fluxo(pedidos)
     return [round(fat.get(int(l.replace("h", "")), 0)) for l in labels]
+    

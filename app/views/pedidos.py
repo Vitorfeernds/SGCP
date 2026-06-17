@@ -1,11 +1,8 @@
 import tkinter as tk
-from app.theme import COLORS, FONT, HoverButton
-from app.views.base import SGCPApp
-from app.db.cardapio import _CARDAPIO_IDX, _indice_cardapio
-import datetime
+from app.theme import (COLORS, FONT, HoverButton, STATUS_CORES, brl)
+import app.state as state
+from app.logic.cardapio import (calcular_tempo_medio, reconstruir_indice)
 
-from app.logic.analytics import brl, calcular_tempo_medio
-from app.db.pedidos import STATUS_CORES
 
 
 
@@ -114,7 +111,7 @@ def _abrir_detalhe_os(self, p):
                 tk.Label(nf, text=entry["nome"], bg=COLORS["card"], fg=COLORS["dark"],
                          font=(FONT,10,"bold"), anchor="w",
                          wraplength=190, justify="left").pack(anchor="w")
-                d = (_CARDAPIO_IDX or _indice_cardapio()).get(entry["nome"])
+                d = (state.CARDAPIO_IDX).get(entry["nome"])
                 if d:
                     tk.Label(nf, text=f"\u23F1 {d.get('tempo','—')}",
                              bg=COLORS["card"], fg=COLORS["gray"],
